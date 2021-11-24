@@ -38,14 +38,14 @@ def solution(disposition, attendu):
 		Clauses
 	===========================
 	"""
-	# Prise en compte de la configuration initiale
-	for b in range(nb_billes):
+	# Prise en compte de la configuration initiale # JUSTE
+	for t in range(nb_billes):
 		for i in range(hauteur):
 			for j in range(largeur):
 				if (i,j) not in plateau:
-					cnf.append([-vpool.id((i,j,b))])
+					cnf.append([-vpool.id((i,j,t))])
 
-	# Prise en compte de la configuration finale
+	# Prise en compte de la configuration finale # JUSTE
 	for i in range(hauteur):
 		for j in range(largeur):
 			for x in range(hauteur):
@@ -53,8 +53,8 @@ def solution(disposition, attendu):
 					if (i,j) != (x,y):
 						cnf.append([-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1))])
 
-	# Au plus un mouvement à la fois
-	for b in range(nb_billes):
+	# Au plus un mouvement à la fois # JUSTE
+	for t in range(nb_billes):
 		for i in range(hauteur):
 			for j in range(largeur):
 				for m in mouvement:
@@ -62,20 +62,48 @@ def solution(disposition, attendu):
 						for y in range(largeur):
 							for n in mouvement:
 								if (i, j, m) != (x, y, n):
-									cnf.append([-vpool.id((i,j,b,m)), -vpool.id((x,y,b,n))])
+									cnf.append([-vpool.id((i,j,t,m)), -vpool.id((x,y,t,n))])
 
 	# Mise à jour des variables en fonction des mouvements
-	for b in range(nb_billes):
+	for t in range(nb_billes):
 		for i in range(hauteur):
 			for j in range(largeur):
 				for m in mouvement:
-					cnf.append([-vpool.id((i,j,b,m)), -vpool.id((x,y,b+1))])
+					cnf.append([-vpool.id((i,j,t,m)), -vpool.id((i,j,t+1))]) # Plus de bille à l'instant suivant si déplacement
+					cnf.append([-vpool.id((i,j,t,m)), vpool.id((i,j,t))]) # Il fallait une bille à l'instant précédent si déplacement
 
-	for b in range(nb_billes):
+	# Déplacements
+	for t in range(nb_billes):
 		for i in range(hauteur):
 			for j in range(largeur):
-				for m in mouvement:
-					cnf.append([-vpool.id((i,j,b,m)), vpool.id((x,y,b))])
+				#if (i-2, j) in plateau:
+				# Up
+				cnf.append([-vpool.id((i,j,t,"u")), vpool.id((i-1,j,t))]) # Il doit y avoir une bille sur la case du dessus
+				cnf.append([-vpool.id((i,j,t,"u")), -vpool.id((i-2,j,t))]) # Il ne doit pas y avoir de billes deux cases au dessus
+				
+				cnf.append([-vpool.id((i,j,t,"u")), -vpool.id((i-1,j,t+1))]) # A l'instant suivant, il n'y a plus de bille au dessus
+				cnf.append([-vpool.id((i,j,t,"u")), vpool.id((i-2,j,t+1))]) # A l'instant suivant, il y a une bille deux cases au dessus
+
+				# Right
+				cnf.append([-vpool.id((i,j,t,"r")), vpool.id((i,j+1,t))])
+				cnf.append([-vpool.id((i,j,t,"r")), -vpool.id((i,j+2,t))])
+
+				cnf.append([-vpool.id((i,j,t,"r")), -vpool.id((i,j+1,t+1))])
+				cnf.append([-vpool.id((i,j,t,"r")), vpool.id((i,j+2,t+1))])
+
+				# Down
+				cnf.append([-vpool.id((i,j,t,"d")), vpool.id((i+1,j,t))])
+				cnf.append([-vpool.id((i,j,t,"d")), -vpool.id((i+2,j,t))])
+
+				cnf.append([-vpool.id((i,j,t,"d")), -vpool.id((i+1,j,t+1))])
+				cnf.append([-vpool.id((i,j,t,"d")), vpool.id((i+2,j,t+1))])
+
+				# Left
+				cnf.append([-vpool.id((i,j,t,"l")), vpool.id((i,j-1,t))])
+				cnf.append([-vpool.id((i,j,t,"l")), -vpool.id((i,j-2,t))])
+
+				cnf.append([-vpool.id((i,j,t,"l")), -vpool.id((i,j-1,t+1))])
+				cnf.append([-vpool.id((i,j,t,"l")), vpool.id((i,j-2,t+1))])
 
 	"""
 	===========================
@@ -93,14 +121,15 @@ def solution(disposition, attendu):
 	print("Temps de resolution : " + '{0:.2f}s'.format(s.time()))
 
 	if resultat:
+		computed = []
 		for i in range(hauteur):
+			line = []
 			for j in range(largeur):
 				if vpool.id((i,j)) in s.get_model():
-					print("1", end="")
+					line.append(1)
 				else:
-					print("0", end="")
-			print("")
+					line.append(0)
+			computed.append(line)
 
-		return True
-	else:
-		return False
+		print(computed)
+		return computed == attendu
