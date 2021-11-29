@@ -23,8 +23,8 @@ def solution(disposition, attendu):
 		i += 1
 	
 	taille_plateau = len(plateau)
-	largeur = len(disposition)
-	hauteur = len(disposition[0])
+	largeur = len(disposition[0])
+	hauteur = len(disposition)
 	mouvement = ["u", "r", "d", "l"] # Up / Right / Down / Left
 
 	vpool = IDPool(start_from=1)
@@ -47,7 +47,6 @@ def solution(disposition, attendu):
 			elif disposition[i][j] == 1:
 				cnf.append([vpool.id((i,j,0))])
 
-	print(cnf.clauses)
 
 	# Prise en compte de la configuration finale # JUSTE
 	for i in range(hauteur):
@@ -55,11 +54,7 @@ def solution(disposition, attendu):
 			for x in range(hauteur):
 				for y in range(largeur):
 					if (i,j) != (x,y) and (i,j) in plateau and (x,y) in plateau:
-						print("-" + str((i,j,nb_billes-1)), "-" + str((x,y,nb_billes-1)))
-						print(-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1)))
 						cnf.append([-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1))])
-
-	print(cnf.clauses)
 
 	# Au plus un mouvement à la fois # JUSTE
 	for t in range(nb_billes):
@@ -219,7 +214,6 @@ def solution(disposition, attendu):
 
 	print("Temps de resolution : " + '{0:.2f}s'.format(s.time()))
 
-	print(s.get_model())
 	if resultat:
 		computed = []
 		for t in range(nb_billes):
@@ -228,7 +222,7 @@ def solution(disposition, attendu):
 				line = []
 				for j in range(largeur):
 					if (i,j) not in plateau:
-						print(-1)
+						print("*",end="")
 					else:
 						if vpool.id((i,j,t)) in s.get_model():
 							print(1, end="")
