@@ -30,6 +30,7 @@ def solution(disposition, attendu):
 	vpool = IDPool(start_from=1)
 	cnf = CNF()
 
+	print("Voici les coordonnées du plateau :", plateau)
 	print("Le plateau fait :", taille_plateau, "cases.")
 	print("Il y a :", nb_billes, "billes.")
 
@@ -41,9 +42,9 @@ def solution(disposition, attendu):
 	# Prise en compte de la configuration initiale # JUSTE
 	for i in range(hauteur):
 		for j in range(largeur):
-			if (i,j) not in plateau:
+			if disposition[i][j] == 0:
 				cnf.append([-vpool.id((i,j,0))])
-			else:
+			elif disposition[i][j] == 1:
 				cnf.append([vpool.id((i,j,0))])
 
 	print(cnf.clauses)
