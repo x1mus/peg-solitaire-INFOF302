@@ -39,16 +39,18 @@ def solution(disposition, attendu):
 		Clauses
 	===========================
 	"""
-	# Prise en compte de la configuration initiale # JUSTE
+	# Prise en compte de la configuration initiale
 	for i in range(hauteur):
 		for j in range(largeur):
-			if disposition[i][j] == 0:
-				cnf.append([-vpool.id((i,j,0))])
-			elif disposition[i][j] == 1:
-				cnf.append([vpool.id((i,j,0))])
+			if (i,j) in plateau:
+				if disposition[i][j] == 0:
+					cnf.append([-vpool.id((i,j,0))]) # Si la case ne contient pas de bille alors : -Xij0
+				elif disposition[i][j] == 1:
+					cnf.append([vpool.id((i,j,0))]) # Si la case contient une bille alors : Xij0
 
 
-	# Prise en compte de la configuration finale # JUSTE
+	# Prise en compte de la configuration finale (il ne reste plus qu'une seule bille)
+		# Xijb-1 -> -Xi'j'b-1
 	for i in range(hauteur):
 		for j in range(largeur):
 			for x in range(hauteur):
@@ -56,7 +58,8 @@ def solution(disposition, attendu):
 					if (i,j) != (x,y) and (i,j) in plateau and (x,y) in plateau:
 						cnf.append([-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1))])
 
-	# Au plus un mouvement à la fois # JUSTE
+	# Au plus un mouvement à la fois
+		# Cijtm -> -Ci'j'tm'
 	for t in range(nb_billes):
 		for i in range(hauteur):
 			for j in range(largeur):
@@ -72,22 +75,31 @@ def solution(disposition, attendu):
 		for i in range(hauteur):
 			for j in range(largeur):
 				for m in mouvement:
-					cnf.append([-vpool.id((i,j,t,m)), -vpool.id((i,j,t+1))]) # Plus de bille à l'instant suivant si déplacement
-					cnf.append([-vpool.id((i,j,t,m)), vpool.id((i,j,t))]) # Il fallait une bille à l'instant précédent si déplacement
+					if (i,j) in plateau:
+						# Cijtm -> -Xijt+1
+						cnf.append([-vpool.id((i,j,t,m)), -vpool.id((i,j,t+1))]) # Plus de bille à l'instant suivant si déplacement
+						# Cijtm -> Xijt
+						cnf.append([-vpool.id((i,j,t,m)), vpool.id((i,j,t))]) # Il fallait une bille pour faire le déplacement
 
 	# Déplacements
 	for t in range(nb_billes-1):
 		for i in range(hauteur):
 			for j in range(largeur):
-				if (i-2, j) in plateau:
+				if (i-2, j) in plateau and (i,j) in plateau:
 					# Up
+					# Cijt"u" -> Xi-1jt
 					cnf.append([-vpool.id((i,j,t,"u")), vpool.id((i-1,j,t))]) # Il doit y avoir une bille sur la case du dessus
+
+					# Cijt"u" -> -Xi-2jt
 					cnf.append([-vpool.id((i,j,t,"u")), -vpool.id((i-2,j,t))]) # Il ne doit pas y avoir de billes deux cases au dessus
 					
+					# Cijt"u" -> -Xi-1jt+1
 					cnf.append([-vpool.id((i,j,t,"u")), -vpool.id((i-1,j,t+1))]) # A l'instant suivant, il n'y a plus de bille au dessus
+					
+					# Cijt"u" -> Xi-2jt+1
 					cnf.append([-vpool.id((i,j,t,"u")), vpool.id((i-2,j,t+1))]) # A l'instant suivant, il y a une bille deux cases au dessus
 
-				if (i, j+2) in plateau:
+				if (i, j+2) in plateau and (i,j) in plateau:
 					# Right
 					cnf.append([-vpool.id((i,j,t,"r")), vpool.id((i,j+1,t))])
 					cnf.append([-vpool.id((i,j,t,"r")), -vpool.id((i,j+2,t))])
@@ -95,7 +107,7 @@ def solution(disposition, attendu):
 					cnf.append([-vpool.id((i,j,t,"r")), -vpool.id((i,j+1,t+1))])
 					cnf.append([-vpool.id((i,j,t,"r")), vpool.id((i,j+2,t+1))])
 
-				if (i+2, j) in plateau:
+				if (i+2, j) in plateau and (i,j) in plateau:
 					# Down
 					cnf.append([-vpool.id((i,j,t,"d")), vpool.id((i+1,j,t))])
 					cnf.append([-vpool.id((i,j,t,"d")), -vpool.id((i+2,j,t))])
@@ -103,7 +115,7 @@ def solution(disposition, attendu):
 					cnf.append([-vpool.id((i,j,t,"d")), -vpool.id((i+1,j,t+1))])
 					cnf.append([-vpool.id((i,j,t,"d")), vpool.id((i+2,j,t+1))])
 
-				if (i, j-2) in plateau:
+				if (i, j-2) in plateau and (i,j) in plateau:
 					# Left
 					cnf.append([-vpool.id((i,j,t,"l")), vpool.id((i,j-1,t))])
 					cnf.append([-vpool.id((i,j,t,"l")), -vpool.id((i,j-2,t))])
@@ -111,57 +123,58 @@ def solution(disposition, attendu):
 					cnf.append([-vpool.id((i,j,t,"l")), -vpool.id((i,j-1,t+1))])
 					cnf.append([-vpool.id((i,j,t,"l")), vpool.id((i,j-2,t+1))])
 
-	# Keep other ball variables unchanged
+	# Lorsqu'un mouvement est effectué sur 3 billes, les autres billes ne sont pas impactés
 	for t in range(nb_billes-1):
 		for i in range(hauteur):
 			for j in range(largeur):
-				if (i, j-2) in plateau:
-					for x in range(hauteur):
+				for x in range(hauteur):
 						for y in range(largeur):
-							if (x != i or (y != j and y != j-1 and y != j-2)):
-								cnf.append([-vpool.id((i,j,t,"l")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
+							if (i-2, j) in plateau and (i,j) in plateau:
+								# Up
+								# Cijt"u" -> (Xi'j't <-> Xi'j't+1)
+								if (y != j or (x != i and x != i-1 and x != i-2)):
+									cnf.append([-vpool.id((i,j,t,"u")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
 
-								cnf.append([-vpool.id((i,j,t,"l")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
+									cnf.append([-vpool.id((i,j,t,"u")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
 
-				if (i-2, j) in plateau:
-					for x in range(hauteur):
-						for y in range(largeur):
-							if (y != j or (x != i and x != i-1 and x != i-2)):
-								cnf.append([-vpool.id((i,j,t,"u")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
+							if (i, j+2) in plateau and (i,j) in plateau:
+								# Right
+								if (x != i or (y != j and y != j+1 and y != j+2)):
+									cnf.append([-vpool.id((i,j,t,"r")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
 
-								cnf.append([-vpool.id((i,j,t,"u")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
+									cnf.append([-vpool.id((i,j,t,"r")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
 
-				if (i, j+2) in plateau:
-					for x in range(hauteur):
-						for y in range(largeur):
-							if (x != i or (y != j and y != j+1 and y != j+2)):
-								cnf.append([-vpool.id((i,j,t,"r")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
+							if (i+2, j) in plateau and (i,j) in plateau:
+								# Down
+								if (y != j or (x != i and x != i+1 and x != i+2)):
+									cnf.append([-vpool.id((i,j,t,"d")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
 
-								cnf.append([-vpool.id((i,j,t,"r")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
+									cnf.append([-vpool.id((i,j,t,"d")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
 
-				if (i+2, j) in plateau:
-					for x in range(hauteur):
-						for y in range(largeur):
-							if (y != j or (x != i and x != i+1 and x != i+2)):
-								cnf.append([-vpool.id((i,j,t,"d")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
+							if (i, j-2) in plateau and (i,j) in plateau:
+								# Left
+								if (x != i or (y != j and y != j-1 and y != j-2)):
+									cnf.append([-vpool.id((i,j,t,"l")),-vpool.id((x,y,t)),vpool.id((x,y,t+1))])
 
-								cnf.append([-vpool.id((i,j,t,"d")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
+									cnf.append([-vpool.id((i,j,t,"l")),-vpool.id((x,y,t+1)),vpool.id((x,y,t))])
 
-	# Disallow bad moves
+	# On ne peut pas sortir du plateau avec un mouvement
+	# Si la case d'arrivée est hors du plateau, le mouvement ne peut pas être effectué
 	for t in range(nb_billes):
 		for i in range(hauteur):
 			for j in range(largeur):
 				if (i,j) in plateau:
-					if (i, j-2) not in plateau:
-						cnf.append([-vpool.id((i,j,t,"l"))])
 					if (i-2, j) not in plateau:
 						cnf.append([-vpool.id((i,j,t,"u"))])
 					if (i, j+2) not in plateau:
 						cnf.append([-vpool.id((i,j,t,"r"))])
 					if (i+2, j) not in plateau:
 						cnf.append([-vpool.id((i,j,t,"d"))])
-
-	# If a cell has changed, then move affecting it
+					if (i, j-2) not in plateau:
+						cnf.append([-vpool.id((i,j,t,"l"))])
+	
+	# Si une case a changé d'état, alors un mouvement l'a affecté
+	# ((Xijt & -Xijt+1) v (-Xijt & Xijt+1)) -> (Cijt"u" v Ci+1jt"u" v Ci+2jt"u") # Pas forcément juste
 	for t in range(nb_billes-1):
 		for i in range(hauteur):
 			for j in range(largeur):
