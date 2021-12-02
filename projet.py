@@ -11,6 +11,7 @@ def solution(disposition, attendu):
 	"""
 	plateau = []
 	nb_billes = 0
+	nb_billes_restantes = 0
 	i = 0
 	for ligne in disposition:
 		j = 0
@@ -21,6 +22,13 @@ def solution(disposition, attendu):
 					nb_billes += 1
 			j += 1
 		i += 1
+
+	i = 0
+	for ligne in attendu:
+		for case in ligne:
+			if case == 1:
+				nb_billes_restantes += 1
+
 	
 	taille_plateau = len(plateau)
 	largeur = len(disposition[0])
@@ -30,9 +38,10 @@ def solution(disposition, attendu):
 	vpool = IDPool(start_from=1)
 	cnf = CNF()
 
+	"""
 	print("Voici les coordonnées du plateau :", plateau)
 	print("Le plateau fait :", taille_plateau, "cases.")
-	print("Il y a :", nb_billes, "billes.")
+	print("Il y a :", nb_billes, "billes.")"""
 
 	"""
 	===========================
@@ -57,13 +66,22 @@ def solution(disposition, attendu):
 		# Xijb-1 -> -Xi'j'b-1
 	#print("Configuration finale :")
 	#print("======================")
-	for i in range(hauteur):
+	"""for i in range(hauteur):
 		for j in range(largeur):
 			for x in range(hauteur):
 				for y in range(largeur):
 					if (i,j) != (x,y) and (i,j) in plateau and (x,y) in plateau:
 						#print("X" + str(i) + str(j) + str(nb_billes-1) + " --> -X" + str(x) + str(y) + str(nb_billes-1))
-						cnf.append([-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1))])
+						cnf.append([-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1))])"""
+
+	# Prise en compte config finale 2
+	for i in range(hauteur):
+		for j in range(largeur):
+			if (i,j) in plateau:
+				if attendu[i][j] == 1:
+					cnf.append([vpool.id((i,j,nb_billes-nb_billes_restantes))])
+				else:
+					cnf.append([-vpool.id((i,j,nb_billes-nb_billes_restantes))])
 
 	# Au plus un mouvement à la fois
 		# Cijtm -> -Ci'j'tm'
@@ -286,6 +304,7 @@ def solution(disposition, attendu):
 	#print(cnf.clauses)
 	#print(s.get_model())
 	
+	print("====================")
 	print("Resolution...")
 	resultat = s.solve()
 	print("satisfaisable : " + str(resultat))
@@ -294,23 +313,24 @@ def solution(disposition, attendu):
 
 	if resultat:
 		computed = []
-		for t in range(nb_billes):
-			print("Instant:", t)
-			for i in range(hauteur):
-				line = []
-				for j in range(largeur):
-					if (i,j) not in plateau:
-						print("*",end="")
-						line.append("*")
+		"""for t in range(nb_billes):
+			print("Instant:", t)"""
+		for i in range(hauteur):
+			line = []
+			for j in range(largeur):
+				if (i,j) not in plateau:
+					print("*",end="")
+					line.append(-1)
+				else:
+					if vpool.id((i,j,nb_billes-nb_billes_restantes)) in s.get_model():
+						print(1, end="")
+						line.append(1)
 					else:
-						if vpool.id((i,j,t)) in s.get_model():
-							print(1, end="")
-							line.append(1)
-						else:
-							print(0, end="")
-							line.append(0)
-				computed.append(line)
-				print()
+						print(0, end="")
+						line.append(0)
+			computed.append(line)
+			print()
 
-		print(computed)
+		#print(computed)
+		print("--------------------")
 		return computed == attendu
