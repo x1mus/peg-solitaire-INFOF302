@@ -1,4 +1,3 @@
-import argparse
 from projet import solution
 
 
@@ -30,26 +29,16 @@ def display_matrixes(disposition, attendu):
 
 
 def main():
-	l = [[[[1,0,0],[1,0,0],[0,1,0]],[[0,0,0],[0,0,0],[0,0,1]]],[[[-1,1,-1],[-1,1,-1],[-1,0,-1]],[[-1,0,-1],[-1,0,-1],[-1,1,-1]]],[[[0,1,0,-1],[1,1,1,1],[0,-1,1,1]],[[0,0,0,-1],[0,1,0,1],[1,-1,0,1]]],[[[-1,-1,-1,1,-1,-1,-1],[-1,-1,0,1,0,-1,-1],[-1,0,0,0,1,0,-1],[1,1,0,0,0,1,0],[0,0,1,0,1,0,0],[-1,1,0,0,0,0,-1],[-1,-1,0,0,0,-1,-1],[-1,-1,-1,0,-1,-1,-1]],[[-1,-1,-1,0,-1,-1,-1],[-1,-1,0,0,0,-1,-1],[-1,0,0,0,0,0,-1],[0,0,0,1,0,0,0],[0,0,0,0,0,0,0],[-1,0,0,0,0,0,-1],[-1,-1,0,0,0,-1,-1],[-1,-1,-1,0,-1,-1,-1],]],[[[-1,-1,0,0,0,-1,-1],[-1,0,0,1,0,0,-1],[0,0,1,0,1,0,0],[1,1,0,1,0,0,0],[0,0,1,0,0,1,1],[-1,1,1,0,0,0,-1],[-1,-1,0,0,0,-1,-1],],[[-1,-1,0,0,0,-1,-1],[-1,0,0,1,0,0,-1],[0,0,1,0,1,0,0],[0,0,0,1,0,0,0],[0,0,0,0,1,0,0],[-1,0,1,1,0,0,-1],[-1,-1,0,0,0,-1,-1]]]]
+	print("##############################")
+	print("         QUESTION 1/2         ")
+	print("##############################")
+
+	"""l = [[[[1,0,0],[1,0,0],[0,1,0]],[[0,0,0],[0,0,0],[0,0,1]]],[[[-1,1,-1],[-1,1,-1],[-1,0,-1]],[[-1,0,-1],[-1,0,-1],[-1,1,-1]]],[[[0,1,0,-1],[1,1,1,1],[0,-1,1,1]],[[0,0,0,-1],[0,1,0,1],[1,-1,0,1]]],[[[-1,-1,-1,1,-1,-1,-1],[-1,-1,0,1,0,-1,-1],[-1,0,0,0,1,0,-1],[1,1,0,0,0,1,0],[0,0,1,0,1,0,0],[-1,1,0,0,0,0,-1],[-1,-1,0,0,0,-1,-1],[-1,-1,-1,0,-1,-1,-1]],[[-1,-1,-1,0,-1,-1,-1],[-1,-1,0,0,0,-1,-1],[-1,0,0,0,0,0,-1],[0,0,0,1,0,0,0],[0,0,0,0,0,0,0],[-1,0,0,0,0,0,-1],[-1,-1,0,0,0,-1,-1],[-1,-1,-1,0,-1,-1,-1],]],[[[-1,-1,0,0,0,-1,-1],[-1,0,0,1,0,0,-1],[0,0,1,0,1,0,0],[1,1,0,1,0,0,0],[0,0,1,0,0,1,1],[-1,1,1,0,0,0,-1],[-1,-1,0,0,0,-1,-1],],[[-1,-1,0,0,0,-1,-1],[-1,0,0,1,0,0,-1],[0,0,1,0,1,0,0],[0,0,0,1,0,0,0],[0,0,0,0,1,0,0],[-1,0,1,1,0,0,-1],[-1,-1,0,0,0,-1,-1]]]]
 	s = [[[[1,0],[1,0]],[[0,1],[0,0]]],[[[1,1,0],[1,1,0],[0,0,1]],[[0,0,0],[0,1,0],[1,0,1]]],[[[1,0,-1,1],[1,-1,0,1],[1,1,0,0],[1,0,-1,1]],[[1,0,-1,0],[1,-1,0,1],[0,0,0,0],[0,0,-1,0]]],[[[-1,1,1,-1],[1,0,1,1],[1,1,1,1],[-1,1,1,-1]],[[-1,0,0,-1],[0,1,0,0],[0,0,0,0],[-1,0,0,-1]]]]
 	m1=[[[-1,-1,1,1,1,-1,-1],[-1,-1,1,1,1,-1,-1],[1,1,1,1,1,1,1],[1,1,1,0,1,1,1],[1,1,1,1,1,1,1],[-1,-1,1,1,1,-1,-1],[-1,-1,1,1,1,-1,-1]],[[-1,-1,0,0,0,-1,-1],[-1,-1,0,0,0,-1,-1],[0,0,0,0,0,0,0],[0,0,0,1,0,0,0],[0,0,0,0,0,0,0],[-1,-1,0,0,0,-1,-1],[-1,-1,0,0,0,-1,-1]]]
 	m2=[[[-1,1,1,1,-1],[1,1,1,1,1],[1,1,0,1,1],[1,1,1,1,1],[-1,1,1,1,-1]],[[-1,0,0,0,-1],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[-1,0,0,0,-1]]]
 
-	"""test = [
-		[
-			[0, 1,0,-1],
-			[1, 1,1, 1],
-			[0,-1,1, 1]
-		],[
-			[0, 0,0,-1],
-			[0, 1,0, 1],
-			[1,-1,0, 1]
-		]
-	]
-	solution(test[0], test[1], 1)
-	display_matrixes(test[0], test[1])"""
-
-	"""for m in l:
+	for m in l:
 		if not solution(m[0], m[1], 1):
 			print("Votre programme échoue sur le couple :")
 		else:
@@ -75,9 +64,29 @@ def main():
 		print("Votre programme marche sur le couple :")
 	display_matrixes(m2[0],m2[1])"""
 
+
+	print()
+	print("##############################")
+	print("          QUESTION 3          ")
+	print("##############################")
+
+	generalized_cross_boards = [
+		[
+			[-1, 1, 1, 1, -1,-1],
+			[-1, 1, 1, 1, -1,-1],
+			[1, 1, 1, 1, 1,1],
+			[0, 1, 1, 1, 1,1],
+			[1, 1, 1, 1, 1,1],
+			[-1, 1, 1, 1, -1,-1]
+		],
+	]
+
+	for m in generalized_cross_boards:
+		solution(m)
+
 	figure1 = [
 		[
-			[-1,-1,1,1,1,-1,-1], # Figure 1.1 (+- 7s)
+			[-1,-1,1,1,1,-1,-1], # Figure 1.1 (Plateau européen)
 			[-1,1,1,1,1,1,-1],
 			[1,1,1,0,1,1,1],
 			[1,1,1,1,1,1,1],
@@ -86,7 +95,7 @@ def main():
 			[-1,-1,1,1,1,-1,-1]
 		],
 		[
-			[-1,-1,-1,1,1,1,-1,-1,-1], # Figure 1.2
+			[-1,-1,-1,1,1,1,-1,-1,-1], # Figure 1.2 (Plateau allemand)
 			[-1,-1,-1,1,1,1,-1,-1,-1],
 			[-1,-1,-1,1,1,1,-1,-1,-1],
 			[1,1,1,1,1,1,1,1,1],
@@ -97,7 +106,7 @@ def main():
 			[-1,-1,-1,1,1,1,-1,-1,-1]
 		],
 		[
-			[-1,-1,1,1,1,-1,-1,-1], # Figure 1.3 (+- 16s)
+			[-1,-1,1,1,1,-1,-1,-1], # Figure 1.3 (Plateau asymétrique)
 			[-1,-1,1,1,1,-1,-1,-1],
 			[-1,-1,1,1,1,-1,-1,-1],
 			[1,1,1,1,1,1,1,1],
@@ -107,7 +116,16 @@ def main():
 			[-1,-1,1,1,1,-1,-1,-1],
 		],
 		[
-			[-1,-1,-1,-1,1,-1,-1,-1,-1], # Figure 1.5
+			[-1,-1,1,1,1,-1,-1], # Figure 1.4 (Plateau anglais)
+			[-1,-1,1,1,1,-1,-1],
+			[1,1,1,1,1,1,1],
+			[1,1,1,0,1,1,1],
+			[1,1,1,1,1,1,1],
+			[-1,-1,1,1,1,-1,-1],
+			[-1,-1,1,1,1,-1,-1]
+		],
+		[
+			[-1,-1,-1,-1,1,-1,-1,-1,-1], # Figure 1.5 (Plateau en diamant)
 			[-1,-1,-1,1,1,1,-1,-1,-1],
 			[-1,-1,1,1,1,1,1,-1,-1],
 			[-1,1,1,1,1,1,1,1,-1],
@@ -119,7 +137,62 @@ def main():
 		]
 	]
 
-	solution(figure1[3], 2)
+	"""if solution(figure1[0], mode=3):
+		print("Votre programme marche sur le plateau européen (Figure 1.1)")
+	else:
+		print("Votre programme échoue sur le plateau européen (Figure 1.1)")
+
+	if solution(figure1[1], mode=3):
+		print("Votre programme marche sur le plateau allemand (Figure 1.2)")
+	else:
+		print("Votre programme échoue sur le plateau allemand (Figure 1.2)")
+	
+	if solution(figure1[2], mode=3):
+		print("Votre programme marche sur le plateau asymétrique (Figure 1.3)")
+	else:
+		print("Votre programme échoue sur le plateau asymétrique (Figure 1.3)")
+
+	if solution(figure1[3], mode=3):
+		print("Votre programme marche sur le plateau anglais (Figure 1.4)")
+	else:
+		print("Votre programme échoue sur le plateau anglais (Figure 1.4)")
+
+	if solution(figure1[4], mode=3):
+		print("Votre programme marche sur le plateau en diamant (Figure 1.5)")
+	else:
+		print("Votre programme échoue sur le plateau en diamant (Figure 1.5)")"""
+
+
+	print()
+	print("##############################")
+	print("          QUESTION 4          ")
+	print("##############################")
+
+
+	"""if solution(figure1[0], 2):
+		print("Votre programme marche sur le plateau européen (Figure 1.1)")
+	else:
+		print("Votre programme échoue sur le plateau européen (Figure 1.1)")
+
+	if solution(figure1[1], 2):
+		print("Votre programme marche sur le plateau allemand (Figure 1.2)")
+	else:
+		print("Votre programme échoue sur le plateau allemand (Figure 1.2)")
+	
+	if solution(figure1[2], 2):
+		print("Votre programme marche sur le plateau asymétrique (Figure 1.3)")
+	else:
+		print("Votre programme échoue sur le plateau asymétrique (Figure 1.3)")
+
+	if solution(figure1[3], 2):
+		print("Votre programme marche sur le plateau anglais (Figure 1.4)")
+	else:
+		print("Votre programme échoue sur le plateau anglais (Figure 1.4)")
+
+	if solution(figure1[4], 2):
+		print("Votre programme marche sur le plateau en diamant (Figure 1.5)")
+	else:
+		print("Votre programme échoue sur le plateau en diamant (Figure 1.5)")"""
 
 
 if __name__ == "__main__":

@@ -3,7 +3,7 @@ from pysat.solvers import Glucose4
 from pysat.formula import CNF
 from pysat.formula import IDPool
 
-def solution(disposition, attendu=None, question=2):
+def solution(disposition, attendu=None, mode=2):
 	"""
 	===========================
 		Initialisation
@@ -31,10 +31,10 @@ def solution(disposition, attendu=None, question=2):
 		i += 1
 
 	# Calcul du nombre de billes dans la configuration finale
-	if question == 1 and not attendu:
+	if mode == 1 and not attendu:
 		print("Il faut spécifier une matrice M' avec l'option 1")
 		exit()
-	elif question == 1:
+	elif mode == 1:
 		i = 0
 		for ligne in attendu:
 			for case in ligne:
@@ -59,7 +59,7 @@ def solution(disposition, attendu=None, question=2):
 					cnf.append([vpool.id((i,j,0))]) # Si la case contient une bille alors : Xij0
 
 	# Prise en compte de la configuration finale - Passage de M à M'
-	if question == 1:
+	if mode == 1:
 		for i in range(hauteur):
 			for j in range(largeur):
 				if (i,j) in plateau:
@@ -68,19 +68,29 @@ def solution(disposition, attendu=None, question=2):
 					else:
 						cnf.append([-vpool.id((i,j,nb_billes-nb_billes_restantes))]) # La case est vide
 
-	# Prise en compte de la configuration finale - Uniquement 1 bille placée à l'endroit ou se trouvait le trou de départ
-		# TODO
-
 	# Prise en compte de la configuration finale - Uniquement 1 bille
 		# S'il y a une bille au dernier instant, alors il n'y en a pas d'autre.
 		# Xijb-1 -> -Xi'j'b-1
-	if question == 2:
+	if mode == 2:
 		for i in range(hauteur):
 			for j in range(largeur):
 				for x in range(hauteur):
 					for y in range(largeur):
 						if (i,j) != (x,y) and (i,j) in plateau and (x,y) in plateau:
 							cnf.append([-vpool.id((i,j,nb_billes-1)), -vpool.id((x,y,nb_billes-1))])
+
+	# Prise en compte de la configuration finale - Uniquement 1 bille placée à l'endroit où se trouvait le trou de départ
+		# -Xij0 -> Xijb-1 & -Xi'j'b-1
+	if mode == 3:
+		for i in range(hauteur):
+			for j in range(largeur):
+				for x in range(hauteur):
+					for y in range(largeur):
+						if (i,j) != (x,y) and (i,j) in plateau and (x,y) in plateau:
+							cnf.append([vpool.id((i,j,0)), vpool.id((i,j,nb_billes-1))])
+							cnf.append([vpool.id((i,j,0)), -vpool.id((x,y,nb_billes-1))])
+
+
 
 	# Au plus un mouvement à la fois
 		# Si un mouvement est effectué, alors aucun autre n'est effectué au même instant
@@ -202,61 +212,43 @@ def solution(disposition, attendu=None, question=2):
 						cnf.append([-vpool.id((i,j,t,"l"))])
 	
 	# Si une case a changé d'état, alors un mouvement l'a affecté
-	# ((Xijt & -Xijt+1) v (-Xijt & Xijt+1)) -> (
-		# Cijt"u" v Ci+1jt"u" v Ci+2jt"u"
-		# v Cijt"r" v Cij-1t"r" v Cij-2t"r"
-		# v Cijt"d" v Ci-1jt"d" v Ci-2jt"d"
-		# v Cijt"l" v Cij+1t"l" v Cij+2t"l"
-	#)
 	for t in range(nb_billes-1):
 		for i in range(hauteur):
 			for j in range(largeur):
 				if (i,j) in plateau:
+					# Si une case disparait d'un instant à l'autre, alors c'est qu'elle est la source ou l'intermédiaire d'un mouvement
+					# (Xijt & -Xijt+1) -> (Cijt"u" v Ci+1jt"u" v Cijt"r" v Cij-1t"r" v Cijt"d" v Ci-1jt"d" v Cijt"l" v Cij+1t"l")
 					mylist = [-vpool.id((i,j,t)), vpool.id((i,j,t+1))]
-					myprint = "((X" + str(i) + str(j) + str(t) + " & -X" + str(i) + str(j) + str(t+1) + ") v (-X" + str(i) + str(j) + str(t) + " & X" + str(i) + str(j) + str(t+1) + ")) --> ("
 					if (i, j-2) in plateau and (i, j-1) in plateau:
 						mylist.append(vpool.id((i,j,t,"l")))
-						myprint += "C" + str(i) + str(j) + str(t) + "l v "
 					if (i, j-1) in plateau and (i, j+1) in plateau:
 						mylist.append(vpool.id((i,j+1,t,"l")))
-						myprint += "C" + str(i) + str(j+1) + str(t) + "l v "
 					if (i-2, j) in plateau and (i-1, j) in plateau:
 						mylist.append(vpool.id((i,j,t,"u")))
-						myprint += "C" + str(i) + str(j) + str(t) + "u v "
 					if (i-1, j) in plateau and (i+1, j) in plateau:
 						mylist.append(vpool.id((i+1,j,t,"u")))
-						myprint += "C" + str(i+1) + str(j) + str(t) + "u v "
 					if (i, j+2) in plateau and (i, j+1) in plateau:
 						mylist.append(vpool.id((i,j,t,"r")))
-						myprint += "C" + str(i) + str(j) + str(t) + "r v "
 					if (i, j+1) in plateau and (i, j-1) in plateau:
 						mylist.append(vpool.id((i,j-1,t,"r")))
-						myprint += "C" + str(i) + str(j-1) + str(t) + "r v "
 					if (i+2, j) in plateau and (i+1, j) in plateau:
 						mylist.append(vpool.id((i,j,t,"d")))
-						myprint += "C" + str(i) + str(j) + str(t) + "d v "
 					if (i+1, j) in plateau and (i-1, j) in plateau:
 						mylist.append(vpool.id((i-1,j,t,"d")))
-						myprint += "C" + str(i-1) + str(j) + str(t) + "d v "
 					cnf.append(mylist)
 
+					# Si une case apparait d'un instant à l'autre, alors c'est qu'elle est la destination d'un mouvement
+					# (-Xijt & Xijt+1) -> (Ci+2jt"u" v Cij-2t"r" v Ci-2jt"d" v Cij+2t"l")
 					mylist = [vpool.id((i,j,t)), -vpool.id((i,j,t+1))]
 					if (i, j+2) in plateau and (i, j+1) in plateau:
 						mylist.append(vpool.id((i,j+2,t,"l")))
-						myprint += "C" + str(i) + str(j+2) + str(t) + "l v "
 					if (i+2, j) in plateau and (i+1, j) in plateau:
 						mylist.append(vpool.id((i+2,j,t,"u")))
-						myprint += "C" + str(i+2) + str(j) + str(t) + "u v "
 					if (i, j-2) in plateau and (i, j-1) in plateau:
 						mylist.append(vpool.id((i,j-2,t,"r")))
-						myprint += "C" + str(i) + str(j-2) + str(t) + "r v "
 					if (i-2, j) in plateau and (i-1, j) in plateau:
 						mylist.append(vpool.id((i-2,j,t,"d")))
-						myprint += "C" + str(i-2) + str(j) + str(t) + "d"
 					cnf.append(mylist)
-					myprint += ")"
-
-					#print(myprint)
 
 
 	"""
@@ -285,20 +277,18 @@ def solution(disposition, attendu=None, question=2):
 				if (i,j) not in plateau:
 					print("*",end="")
 				else:
-					if question == 1:
+					if mode == 1:
 						if vpool.id((i,j,nb_billes-nb_billes_restantes)) in s.get_model():
 							print(1, end="")
 						else:
 							print(0, end="")
-					elif question == 2:
+					elif mode == 2 or mode == 3:
 						if vpool.id((i,j,nb_billes-1)) in s.get_model():
 							print(1, end="")
 						else:
 							print(0, end="")
-					elif question == 3:
-						pass
 					else:
-						print("Wrong question provided")
+						print("Wrong mode provided")
 			print()
 
 		print("-------------------------------------")
