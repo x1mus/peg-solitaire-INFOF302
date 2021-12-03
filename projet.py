@@ -3,7 +3,7 @@ from pysat.solvers import Glucose4
 from pysat.formula import CNF
 from pysat.formula import IDPool
 
-def solution(disposition, attendu=None, mode=2):
+def solution(disposition, attendu=None, mode=1):
 	"""
 	===========================
 		Initialisation
@@ -34,7 +34,7 @@ def solution(disposition, attendu=None, mode=2):
 	if mode == 1 and not attendu:
 		print("Il faut spécifier une matrice M' avec l'option 1")
 		exit()
-	elif mode == 1:
+	elif mode == 1 and attendu:
 		i = 0
 		for ligne in attendu:
 			for case in ligne:
@@ -265,7 +265,6 @@ def solution(disposition, attendu=None, mode=2):
 	print("Resolution...")
 	resultat = s.solve()
 	print("Satisfaisable : " + str(resultat))
-
 	print("Temps de resolution : " + '{0:.2f}s'.format(s.time()))
 
 	if not resultat :
