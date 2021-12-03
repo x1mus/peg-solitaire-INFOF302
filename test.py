@@ -42,9 +42,11 @@ def display_matrixes(disposition, attendu):
 
 
 def question12():
+	print()
 	print("##############################")
 	print("         QUESTION 1/2         ")
 	print("##############################")
+	print()
 
 	l = [[[[1,0,0],[1,0,0],[0,1,0]],[[0,0,0],[0,0,0],[0,0,1]]],[[[-1,1,-1],[-1,1,-1],[-1,0,-1]],[[-1,0,-1],[-1,0,-1],[-1,1,-1]]],[[[0,1,0,-1],[1,1,1,1],[0,-1,1,1]],[[0,0,0,-1],[0,1,0,1],[1,-1,0,1]]],[[[-1,-1,-1,1,-1,-1,-1],[-1,-1,0,1,0,-1,-1],[-1,0,0,0,1,0,-1],[1,1,0,0,0,1,0],[0,0,1,0,1,0,0],[-1,1,0,0,0,0,-1],[-1,-1,0,0,0,-1,-1],[-1,-1,-1,0,-1,-1,-1]],[[-1,-1,-1,0,-1,-1,-1],[-1,-1,0,0,0,-1,-1],[-1,0,0,0,0,0,-1],[0,0,0,1,0,0,0],[0,0,0,0,0,0,0],[-1,0,0,0,0,0,-1],[-1,-1,0,0,0,-1,-1],[-1,-1,-1,0,-1,-1,-1],]],[[[-1,-1,0,0,0,-1,-1],[-1,0,0,1,0,0,-1],[0,0,1,0,1,0,0],[1,1,0,1,0,0,0],[0,0,1,0,0,1,1],[-1,1,1,0,0,0,-1],[-1,-1,0,0,0,-1,-1],],[[-1,-1,0,0,0,-1,-1],[-1,0,0,1,0,0,-1],[0,0,1,0,1,0,0],[0,0,0,1,0,0,0],[0,0,0,0,1,0,0],[-1,0,1,1,0,0,-1],[-1,-1,0,0,0,-1,-1]]]]
 	s = [[[[1,0],[1,0]],[[0,1],[0,0]]],[[[1,1,0],[1,1,0],[0,0,1]],[[0,0,0],[0,1,0],[1,0,1]]],[[[1,0,-1,1],[1,-1,0,1],[1,1,0,0],[1,0,-1,1]],[[1,0,-1,0],[1,-1,0,1],[0,0,0,0],[0,0,-1,0]]],[[[-1,1,1,-1],[1,0,1,1],[1,1,1,1],[-1,1,1,-1]],[[-1,0,0,-1],[0,1,0,0],[0,0,0,0],[-1,0,0,-1]]]]
@@ -52,26 +54,26 @@ def question12():
 	m2=[[[-1,1,1,1,-1],[1,1,1,1,1],[1,1,0,1,1],[1,1,1,1,1],[-1,1,1,1,-1]],[[-1,0,0,0,-1],[0,0,0,0,0],[0,0,1,0,0],[0,0,0,0,0],[-1,0,0,0,-1]]]
 
 	for m in l:
-		if not solution(m[0], m[1], 1):
+		if not solution(m[0], m[1]):
 			print("Votre programme échoue sur le couple :")
 		else:
 			print("Votre programme marche sur le couple :")
 		display_matrixes(m[0],m[1])
 	
 	for m in s:
-		if solution(m[0], m[1], 1):
+		if solution(m[0], m[1]):
 			print("Votre programme échoue sur le couple :")
 		else:
 			print("Votre programme marche sur le couple :")
 		display_matrixes(m[0],m[1])
 	
-	if not solution(m1[0], m1[1], 1):
+	if not solution(m1[0], m1[1]):
 		print("Votre programme échoue sur le couple :")
 	else:
 		print("Votre programme marche sur le couple :")
 	display_matrixes(m1[0],m1[1])
 	
-	if solution(m2[0], m2[1], 1):
+	if solution(m2[0], m2[1]):
 		print("Votre programme échoue sur le couple :")
 	else:
 		print("Votre programme marche sur le couple :")
@@ -79,9 +81,11 @@ def question12():
 
 
 def question3(mlist):
+	print()
 	print("##############################")
 	print("          QUESTION 3          ")
 	print("##############################")
+	print()
 
 	for m in mlist:
 		if solution(m, mode=3):
@@ -92,9 +96,11 @@ def question3(mlist):
 
 
 def question4(mlist):
+	print()
 	print("##############################")
 	print("          QUESTION 4          ")
 	print("##############################")
+	print()
 
 	for m in mlist:
 		if solution(m, mode=2):
@@ -105,8 +111,6 @@ def question4(mlist):
 
 
 def main():
-	#question12()
-
 	generalized_cross_boards = [
 		[
 			[-1,-1,1,1,1,-1,-1],
@@ -185,11 +189,13 @@ def main():
 		]
 	]
 
-	#question3(generalized_cross_boards)
-	question3([figure1[3]]) # Temps raisonnable pour 1.3
+	question12()
 
-	#question4(generalized_cross_boards)
-	#question4([figure1[0], figure1[2]]) # Temps raisonnable pour 1.1 et 1.3
+	question3(generalized_cross_boards)
+	question3([figure1[2], figure1[3]]) # Temps raisonnable pour 1.3 et 1.4
+
+	question4(generalized_cross_boards)
+	question4([figure1[0], figure1[2]]) # Temps raisonnable pour 1.1 et 1.3
 
 
 if __name__ == "__main__":

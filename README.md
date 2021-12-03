@@ -20,7 +20,7 @@ solution(m1, m2, mode=1)
 solution(m, mode=2)
 solution(m, mode=3)
 ```
-### Résolution de la 1er et 2ème questions
+### Résolution de la 1ère et 2ème questions
 Cette partie de l'implémentation peu être exécutée totalement sans problème de temps. Les différentes matrices sont fournies par le professeur.
 Celle-ci est lancée grâce à la fonction :
 ```py
@@ -28,7 +28,7 @@ question12()
 ```
 
 ### Résolution de la 3ème et 4ème questions
-Afin d'obtenir des résultats dans un limite de temps correcte, il n'est pas possible de fournir toutes les matrices à notre implémentation. C'est pourquoi celle-ci contient d'autres matrices ayant comme particularité d'être soluble avec le trou de départ à n'importe quel endroit.
+Afin d'obtenir des résultats dans un limite de temps correcte, il n'est pas possible de fournir toutes les matrices à notre implémentation. C'est pourquoi celle-ci ne contient que certaines des matrices fournies ainsi que d'autres matrices ayant comme particularité d'être soluble avec le trou de départ à n'importe quel endroit.
 
 Ces matrices ont été trouvées sur le site internet de [George I. Bell](http://www.gibell.net/pegsolitaire/GenCross/GenCrossBoards0.html)
 Afin d'exécuter ces questions, il faut utiliser ces fonctions :
