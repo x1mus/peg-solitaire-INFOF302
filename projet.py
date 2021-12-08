@@ -90,8 +90,6 @@ def solution(disposition, attendu=None, mode=1):
 							cnf.append([vpool.id((i,j,0)), vpool.id((i,j,nb_billes-1))])
 							cnf.append([vpool.id((i,j,0)), -vpool.id((x,y,nb_billes-1))])
 
-
-
 	# Au plus un mouvement à la fois
 		# Si un mouvement est effectué, alors aucun autre n'est effectué au même instant
 		# Cijtm -> -Ci'j'tm'
