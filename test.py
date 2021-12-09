@@ -110,6 +110,37 @@ def question4(mlist):
 		display_matrix(m)
 
 
+def question5(m):
+	print()
+	print("##############################")
+	print("          QUESTION 5          ")
+	print("##############################")
+	print()
+
+	new = []
+	i = 0
+	for ligne in m:
+		j = 0
+		new.append([])
+		for case in ligne:
+			if case == -1:
+				new[i].append(case)
+			else:
+				m[i][j] = 0 # On assigne le trou à l'emplacement (i,j)
+				if solution(m, mode=3): # On vérifie que cela est SAT
+					new[i].append(1) # Si oui, on ajoute 1 dans la nouvelle matrice
+				else:
+					new[i].append(0) # Si non, on ajoute 0 dans la nouvelle matrice
+				display_matrix(m)
+				m[i][j] = 1
+			j += 1
+		i += 1
+
+	print()
+	print("Voici les endroits où les trous peuvent être positionnés")
+	display_matrix(new) # On affiche la matrice regroupant les coups possibles
+
+
 def main():
 	generalized_cross_boards = [
 		[
@@ -189,6 +220,13 @@ def main():
 		]
 	]
 
+	q5_m = [
+		[1,1,1,1,1],
+		[1,1,1,1,1],
+		[1,1,1,1,1],
+		[1,1,1,-1,-1]
+	]
+
 	question12()
 
 	question3(generalized_cross_boards)
@@ -197,6 +235,7 @@ def main():
 	question4(generalized_cross_boards)
 	question4([figure1[0], figure1[2]]) # Temps raisonnable pour 1.1 et 1.3
 
+	question5(q5_m) # Obligation de fournir une matrice ne contenant que des billes afin de tester les différentes positions de trou initial
 
 if __name__ == "__main__":
 	main()

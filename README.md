@@ -10,11 +10,10 @@ pip3 install -r requirements.txt
 
 ## Utilisation
 Notre programme fonctionne selon les différentes questions imposées dans les consignes.
-Les questions implémentées sont au nombre de 4 :
+L'implémentation contient 3 modes de fonctionnement :
 1. Passage d'une matrice M à une matrice M'
 2. Résolution d'une matrice M avec une bille de fin peu importe son emplacement
 3. Résolution d'une matrice M avec la bille de fin où se trouvait le trou du début
-4. TO-DO (4)
 ```py
 solution(m1, m2, mode=1)
 solution(m, mode=2)
@@ -37,6 +36,15 @@ Afin d'exécuter ces questions, il faut utiliser ces fonctions :
 question3([m1, m2, m3, m4, ...])
 question4([m1, m2, m3, m4, ...])
 ```
+
+### Résolution de la question 5
+La question 5 a pour but de tester toutes les possibilés de positionnement de trou initial. Pour ce faire, il suffit de prendre une matrice ne contenant que des -1 et des 1 et de la fournir à la fonction :
+```py
+question5(m)
+```
+
+Cette fonction est implémentée de sorte à appelée la solution de résolution d'une matrice M avec la bille de fin où se trouvait le trou de début pour chaque possible positionnement de trou. Si le solveur renvois "True", alors un 1 est ajouté dans la nouvelle matrice à l'endroit du positionnement du trou. Sinon, un 0 est ajouté.
+
 
 ## Exécution complète
 L'exécution complète peut être lancée via la commande
