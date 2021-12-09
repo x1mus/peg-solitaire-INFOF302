@@ -219,7 +219,7 @@ def main():
 		]
 	]
 
-	figure11 = [
+	q5_m = [
 		[1,1,1,1,1],
 		[1,1,1,1,1],
 		[1,1,1,1,1],
@@ -234,7 +234,7 @@ def main():
 	question4(generalized_cross_boards)
 	question4([figure1[0], figure1[2]]) # Temps raisonnable pour 1.1 et 1.3"""
 
-	question5(figure11) # Obligation de fournir une matrice ne contenant que des billes afin de tester les différentes positions de trou initial
+	question5(q5_m) # Obligation de fournir une matrice ne contenant que des billes afin de tester les différentes positions de trou initial
 
 if __name__ == "__main__":
 	main()
