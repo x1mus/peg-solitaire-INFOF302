@@ -56,3 +56,5 @@ python3 test.py
 - **Laenen Maximilien**
 - **Pembe Lemlin Nathan**
 - **Perez Axelle**
+
+## Note finale du projet : 10/10
